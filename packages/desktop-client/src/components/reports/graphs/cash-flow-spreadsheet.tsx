@@ -160,6 +160,7 @@ function recalculate(data, start, end, isConcise) {
   );
 
   let balance = startingBalance;
+  let balance_uncleared = startingBalance;
   let totalExpenses = 0;
   let totalIncome = 0;
   const graphData = dates.reduce(
@@ -186,7 +187,9 @@ function recalculate(data, start, end, isConcise) {
       totalExpenses += expense_uncleared;
       totalIncome += income;
       totalIncome += income_uncleared;
-      balance += income + expense + income_uncleared + expense_uncleared;
+      balance += income + expense;
+      balance_uncleared +=
+        income + expense + income_uncleared + expense_uncleared;
       const x = d.parseISO(date);
 
       const label = (
@@ -198,12 +201,50 @@ function recalculate(data, start, end, isConcise) {
           </div>
           <div style={{ lineHeight: 1.5 }}>
             <AlignedText left="Income:" right={integerToCurrency(income)} />
+            {income_uncleared !== 0 ? (
+              <AlignedText
+                left="Income (Uncleared):"
+                right={integerToCurrency(income_uncleared)}
+              />
+            ) : (
+              ''
+            )}
             <AlignedText left="Expenses:" right={integerToCurrency(expense)} />
+            {expense_uncleared !== 0 ? (
+              <AlignedText
+                left="Expenses (Uncleared):"
+                right={integerToCurrency(expense_uncleared)}
+              />
+            ) : (
+              ''
+            )}
             <AlignedText
               left="Change:"
               right={<strong>{integerToCurrency(income + expense)}</strong>}
             />
+            {expense_uncleared !== 0 || income_uncleared !== 0 ? (
+              <AlignedText
+                left="Change (incl. uncleared):"
+                right={
+                  <strong>
+                    {integerToCurrency(
+                      income + income_uncleared + expense + expense_uncleared,
+                    )}
+                  </strong>
+                }
+              />
+            ) : (
+              ''
+            )}
             <AlignedText left="Balance:" right={integerToCurrency(balance)} />
+            {expense_uncleared !== 0 || income_uncleared !== 0 ? (
+              <AlignedText
+                left="Balance (incl. uncleared):"
+                right={<strong>{integerToCurrency(balance_uncleared)}</strong>}
+              />
+            ) : (
+              ''
+            )}
           </div>
         </div>
       );
