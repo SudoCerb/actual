@@ -53,7 +53,7 @@ function Header({
   show1Month,
   allMonths,
   onChangeDates,
-  // showUncleared,
+  showUnclearedButton,
   filters,
   conditionsOp,
   onApply,
@@ -62,7 +62,7 @@ function Header({
   onCondOpChange,
 }) {
   // let showUncleared = false;
-  const [showUncleared, setShowUncleared] = useState(false);
+  const [showUncleared, setShowUncleared] = useState(true);
 
   return (
     <View
@@ -134,17 +134,18 @@ function Header({
         <Button bare onClick={() => onChangeDates(...getFullRange(allMonths))}>
           All Time
         </Button>
-        <Button
-          bare
-          onClick={() => {
-            setShowUncleared(!showUncleared);
-          }}
-        >
-          {showUncleared ? 'Hide Uncleared' : 'Show Uncleared'}
-        </Button>
-        {/* <Button bare onClick={() => null}>
-          {showUncleared ? 'Hide Uncleared' : 'Show Uncleared'}
-        </Button> */}
+        {showUnclearedButton ? (
+          <Button
+            bare
+            onClick={() => {
+              setShowUncleared(!showUncleared);
+            }}
+          >
+            {showUncleared ? 'Hide Uncleared' : 'Show Uncleared'}
+          </Button>
+        ) : (
+          ''
+        )}
       </View>
       {filters.length > 0 && (
         <View
