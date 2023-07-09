@@ -98,6 +98,7 @@ function CashFlow() {
         end={monthUtils.getMonth(end)}
         show1Month
         onChangeDates={onChangeDates}
+        showUncleared
         onApply={onApplyFilter}
         filters={filters}
         onUpdateFilter={onUpdateFilter}

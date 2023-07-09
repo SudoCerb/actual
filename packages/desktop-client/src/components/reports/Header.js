@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import * as monthUtils from 'loot-core/src/shared/months';
 
 import ArrowLeft from '../../icons/v1/ArrowLeft';
@@ -51,6 +53,7 @@ function Header({
   show1Month,
   allMonths,
   onChangeDates,
+  // showUncleared,
   filters,
   conditionsOp,
   onApply,
@@ -58,6 +61,9 @@ function Header({
   onDeleteFilter,
   onCondOpChange,
 }) {
+  // let showUncleared = false;
+  const [showUncleared, setShowUncleared] = useState(false);
+
   return (
     <View
       style={{
@@ -128,12 +134,17 @@ function Header({
         <Button bare onClick={() => onChangeDates(...getFullRange(allMonths))}>
           All Time
         </Button>
-        <Button bare onClick={() => null}>
-          Show Uncleared
+        <Button
+          bare
+          onClick={() => {
+            setShowUncleared(!showUncleared);
+          }}
+        >
+          {showUncleared ? 'Hide Uncleared' : 'Show Uncleared'}
         </Button>
-        <Button bare onClick={() => null}>
-          To-date / End of period
-        </Button>
+        {/* <Button bare onClick={() => null}>
+          {showUncleared ? 'Hide Uncleared' : 'Show Uncleared'}
+        </Button> */}
       </View>
       {filters.length > 0 && (
         <View
