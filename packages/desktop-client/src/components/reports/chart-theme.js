@@ -46,6 +46,8 @@ const theme = {
     ...colorFades,
     red: colors.r7,
     blue: colors.b6,
+    green: colors.g6,
+    purple: colors.p6,
   },
   area: {
     style: {

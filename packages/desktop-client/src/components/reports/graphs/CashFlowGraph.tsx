@@ -17,7 +17,13 @@ import Container from '../Container';
 import Tooltip from '../Tooltip';
 
 type CashFlowGraphProps = {
-  graphData: { expenses; expenses_other; income; income_other; balances };
+  graphData: {
+    expenses;
+    expenses_uncleared;
+    income;
+    income_uncleared;
+    balances;
+  };
   isConcise: boolean;
 };
 function CashFlowGraph({ graphData, isConcise }: CashFlowGraphProps) {
@@ -36,12 +42,15 @@ function CashFlowGraph({ graphData, isConcise }: CashFlowGraphProps) {
             }
           >
             <VictoryGroup>
-              {/* <VictoryBar
-                data={graphData.expenses}
-                style={{ data: { fill: theme.colors.red } }}
-              />
-              <VictoryBar data={graphData.income} /> */}
               <VictoryStack>
+                <VictoryBar
+                  data={graphData.expenses_uncleared}
+                  // style={{ data: { fill: theme.colors.green } }}
+                />
+                <VictoryBar
+                  data={graphData.income_uncleared}
+                  style={{ data: { fill: theme.colors.green } }}
+                />
                 <VictoryBar
                   data={graphData.expenses}
                   style={{ data: { fill: theme.colors.red } }}

@@ -125,7 +125,13 @@ export function cashFlowByDate(
 }
 
 function recalculate(data, start, end, isConcise) {
-  let [startingBalance, income, expense] = data;
+  let [
+    startingBalance,
+    income_uncleared,
+    income_cleared,
+    expense_uncleared,
+    expense_cleared,
+  ] = data;
   const dates = isConcise
     ? monthUtils.rangeInclusive(
         monthUtils.getMonth(start),
@@ -133,12 +139,22 @@ function recalculate(data, start, end, isConcise) {
       )
     : monthUtils.dayRangeInclusive(start, end);
   const incomes = index(
-    income,
+    income_cleared,
+    'date',
+    isConcise ? fromDateRepr : fromDateReprToDay,
+  );
+  const incomes_uncleared = index(
+    income_uncleared,
     'date',
     isConcise ? fromDateRepr : fromDateReprToDay,
   );
   const expenses = index(
-    expense,
+    expense_cleared,
+    'date',
+    isConcise ? fromDateRepr : fromDateReprToDay,
+  );
+  const expenses_uncleared = index(
+    expense_uncleared,
     'date',
     isConcise ? fromDateRepr : fromDateReprToDay,
   );
@@ -149,18 +165,28 @@ function recalculate(data, start, end, isConcise) {
   const graphData = dates.reduce(
     (res, date) => {
       let income = 0;
+      let income_uncleared = 0;
       let expense = 0;
+      let expense_uncleared = 0;
 
       if (incomes[date]) {
         income = incomes[date].amount;
       }
+      if (incomes_uncleared[date]) {
+        income_uncleared = incomes_uncleared[date].amount;
+      }
       if (expenses[date]) {
         expense = expenses[date].amount;
       }
+      if (expenses_uncleared[date]) {
+        expense_uncleared = expenses_uncleared[date].amount;
+      }
 
       totalExpenses += expense;
+      totalExpenses += expense_uncleared;
       totalIncome += income;
-      balance += income + expense;
+      totalIncome += income_uncleared;
+      balance += income + expense + income_uncleared + expense_uncleared;
       const x = d.parseISO(date);
 
       const label = (
@@ -183,7 +209,9 @@ function recalculate(data, start, end, isConcise) {
       );
 
       res.income.push({ x, y: integerToAmount(income) });
+      res.income_uncleared.push({ x, y: integerToAmount(income_uncleared) });
       res.expenses.push({ x, y: integerToAmount(expense) });
+      res.expenses_uncleared.push({ x, y: integerToAmount(expense_uncleared) });
       res.balances.push({
         x,
         y: integerToAmount(balance),
@@ -192,7 +220,13 @@ function recalculate(data, start, end, isConcise) {
       });
       return res;
     },
-    { expenses: [], income: [], balances: [] },
+    {
+      expenses: [],
+      expenses_uncleared: [],
+      income: [],
+      income_uncleared: [],
+      balances: [],
+    },
   );
 
   const { balances } = graphData;
