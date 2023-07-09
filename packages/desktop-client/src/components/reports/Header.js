@@ -128,6 +128,9 @@ function Header({
         <Button bare onClick={() => onChangeDates(...getFullRange(allMonths))}>
           All Time
         </Button>
+        <Button bare onClick={() => onChangeDates(...getLatestRange(23))}>
+          Show Uncleared
+        </Button>
       </View>
       {filters.length > 0 && (
         <View
