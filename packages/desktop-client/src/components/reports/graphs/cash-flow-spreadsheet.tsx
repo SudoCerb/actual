@@ -48,6 +48,7 @@ export function cashFlowByDate(
   start,
   end,
   isConcise,
+  // includeUncleared,
   conditions = [],
   conditionsOp,
 ) {
@@ -99,8 +100,22 @@ export function cashFlowByDate(
             'account.offbudget': false,
           })
           .calculate({ $sum: '$amount' }),
-        makeQuery('amount > 0').filter({ amount: { $gt: 0 } }),
-        makeQuery('amount < 0').filter({ amount: { $lt: 0 } }),
+        makeQuery('amount > 0 & uncleared').filter({
+          amount: { $gt: 0 },
+          cleared: { $eq: false },
+        }),
+        makeQuery('amount > 0 & cleared').filter({
+          amount: { $gt: 0 },
+          cleared: { $eq: true },
+        }),
+        makeQuery('amount < 0 & uncleared').filter({
+          amount: { $lt: 0 },
+          cleared: { $eq: false },
+        }),
+        makeQuery('amount < 0 & cleared').filter({
+          amount: { $lt: 0 },
+          cleared: { $eq: true },
+        }),
       ],
       data => {
         setData(recalculate(data, start, end, isConcise));

@@ -8,6 +8,7 @@ import {
   VictoryAxis,
   VictoryVoronoiContainer,
   VictoryGroup,
+  VictoryStack,
 } from 'victory';
 
 import { colors } from '../../../style';
@@ -16,7 +17,7 @@ import Container from '../Container';
 import Tooltip from '../Tooltip';
 
 type CashFlowGraphProps = {
-  graphData: { expenses; income; balances };
+  graphData: { expenses; expenses_other; income; income_other; balances };
   isConcise: boolean;
 };
 function CashFlowGraph({ graphData, isConcise }: CashFlowGraphProps) {
@@ -35,11 +36,18 @@ function CashFlowGraph({ graphData, isConcise }: CashFlowGraphProps) {
             }
           >
             <VictoryGroup>
-              <VictoryBar
+              {/* <VictoryBar
                 data={graphData.expenses}
                 style={{ data: { fill: theme.colors.red } }}
               />
-              <VictoryBar data={graphData.income} />
+              <VictoryBar data={graphData.income} /> */}
+              <VictoryStack>
+                <VictoryBar
+                  data={graphData.expenses}
+                  style={{ data: { fill: theme.colors.red } }}
+                />
+                <VictoryBar data={graphData.income} />
+              </VictoryStack>
             </VictoryGroup>
             <VictoryLine
               data={graphData.balances}
